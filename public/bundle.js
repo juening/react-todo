@@ -137,7 +137,7 @@
 	
 	// require('style!css!node_modules/foundation-sites/dist/foundation.min.css');
 	$(document).foundation();
-	__webpack_require__(/*! style!css!sass!../src/styles/app.scss */ 246);
+	__webpack_require__(/*! style!css!sass!../src/styles/app.scss */ 247);
 	
 	_reactDom2.default.render(_react2.default.createElement(
 	  _reactRouter.Router,
@@ -27983,6 +27983,10 @@
 	
 	var _TodoList2 = _interopRequireDefault(_TodoList);
 	
+	var _TodoAddForm = __webpack_require__(/*! TodoAddForm */ 246);
+	
+	var _TodoAddForm2 = _interopRequireDefault(_TodoAddForm);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -28002,15 +28006,38 @@
 	    _this.state = {
 	      todos: [{ id: 1, text: 'Water the plants' }, { id: 2, text: 'Clean the yard' }, { id: 3, text: 'Check email' }]
 	    };
+	
+	    _this.addTodo = _this.addTodo.bind(_this);
 	    return _this;
 	  }
 	
 	  _createClass(TodoApp, [{
+	    key: 'addTodo',
+	    value: function addTodo(newTodoText) {
+	      console.log('fff');
+	      var newId = this.state.todos.length + 1;
+	      this.state.todos.push({ id: newId, text: newTodoText });
+	      console.log(this.state);
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var todos = this.state.todos;
 	
-	      return _react2.default.createElement(_TodoList2.default, { todos: todos });
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'app' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'column small-centered medium-6 large-4' },
+	            _react2.default.createElement(_TodoList2.default, { todos: this.state.todos }),
+	            _react2.default.createElement(_TodoAddForm2.default, { addTodo: this.addTodo })
+	          )
+	        )
+	      );
 	    }
 	  }]);
 	
@@ -28031,6 +28058,8 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
@@ -28066,12 +28095,12 @@
 	
 	      var renderList = function renderList() {
 	        return todos.map(function (todo) {
-	          return _react2.default.createElement(_Todo2.default, todo);
+	          return _react2.default.createElement(_Todo2.default, _extends({ key: todo.id }, todo));
 	        });
 	      };
 	      return _react2.default.createElement(
 	        'div',
-	        { classname: 'todo-list' },
+	        { className: 'todo-list' },
 	        renderList()
 	      );
 	    }
@@ -28142,6 +28171,94 @@
 
 /***/ }),
 /* 246 */
+/*!***************************************!*\
+  !*** ./src/components/TodoAddForm.js ***!
+  \***************************************/
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 8);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var TodoAddForm = function (_Component) {
+	  _inherits(TodoAddForm, _Component);
+	
+	  function TodoAddForm(props) {
+	    _classCallCheck(this, TodoAddForm);
+	
+	    var _this = _possibleConstructorReturn(this, (TodoAddForm.__proto__ || Object.getPrototypeOf(TodoAddForm)).call(this, props));
+	
+	    _this.state = { text: 'Add a new task' };
+	    _this.onInputChange = _this.onInputChange.bind(_this);
+	    _this.onFormSubmit = _this.onFormSubmit.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(TodoAddForm, [{
+	    key: 'onInputChange',
+	    value: function onInputChange(e) {
+	      this.setState({ text: e.target.value });
+	    }
+	  }, {
+	    key: 'onFormSubmit',
+	    value: function onFormSubmit(e) {
+	      e.preventDefault();
+	      var inputText = this.state.text;
+	      if (inputText) {
+	        this.props.addTodo(inputText);
+	        this.setState({ text: '' });
+	      } else {
+	        this.refs.inputText.focus();
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+	
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'form',
+	          { onSubmit: this.onFormSubmit, className: 'todo-form' },
+	          _react2.default.createElement('input', { type: 'text', onChange: this.onInputChange,
+	            name: 'text', ref: 'inputText', value: this.state.text, onFocus: function onFocus() {
+	              _this2.setState({ text: '' });
+	            } }),
+	          _react2.default.createElement(
+	            'button',
+	            { type: 'submit', className: 'button expanded' },
+	            'Add Todo'
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return TodoAddForm;
+	}(_react.Component);
+	
+	exports.default = TodoAddForm;
+
+/***/ }),
+/* 247 */
 /*!*****************************************************************************!*\
   !*** ./~/style-loader!./~/css-loader!./~/sass-loader!./src/styles/app.scss ***!
   \*****************************************************************************/
@@ -28150,10 +28267,10 @@
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(/*! !../../~/css-loader!../../~/sass-loader!./app.scss */ 247);
+	var content = __webpack_require__(/*! !../../~/css-loader!../../~/sass-loader!./app.scss */ 248);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(/*! ../../~/style-loader/addStyles.js */ 249)(content, {});
+	var update = __webpack_require__(/*! ../../~/style-loader/addStyles.js */ 250)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -28170,13 +28287,13 @@
 	}
 
 /***/ }),
-/* 247 */
+/* 248 */
 /*!************************************************************!*\
   !*** ./~/css-loader!./~/sass-loader!./src/styles/app.scss ***!
   \************************************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(/*! ../../~/css-loader/lib/css-base.js */ 248)();
+	exports = module.exports = __webpack_require__(/*! ../../~/css-loader/lib/css-base.js */ 249)();
 	// imports
 	
 	
@@ -28187,7 +28304,7 @@
 
 
 /***/ }),
-/* 248 */
+/* 249 */
 /*!**************************************!*\
   !*** ./~/css-loader/lib/css-base.js ***!
   \**************************************/
@@ -28246,7 +28363,7 @@
 
 
 /***/ }),
-/* 249 */
+/* 250 */
 /*!*************************************!*\
   !*** ./~/style-loader/addStyles.js ***!
   \*************************************/
