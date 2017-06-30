@@ -137,7 +137,7 @@
 	
 	// require('style!css!node_modules/foundation-sites/dist/foundation.min.css');
 	$(document).foundation();
-	__webpack_require__(/*! style!css!sass!../src/styles/app.scss */ 247);
+	__webpack_require__(/*! style!css!sass!../src/styles/app.scss */ 248);
 	
 	_reactDom2.default.render(_react2.default.createElement(
 	  _reactRouter.Router,
@@ -27987,6 +27987,10 @@
 	
 	var _TodoAddForm2 = _interopRequireDefault(_TodoAddForm);
 	
+	var _TodoSearch = __webpack_require__(/*! TodoSearch */ 247);
+	
+	var _TodoSearch2 = _interopRequireDefault(_TodoSearch);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -28004,10 +28008,13 @@
 	    var _this = _possibleConstructorReturn(this, (TodoApp.__proto__ || Object.getPrototypeOf(TodoApp)).call(this, props));
 	
 	    _this.state = {
-	      todos: [{ id: 1, text: 'Water the plants' }, { id: 2, text: 'Clean the yard' }, { id: 3, text: 'Check email' }]
+	      todos: [{ id: 1, text: 'Water the plants' }, { id: 2, text: 'Clean the yard' }, { id: 3, text: 'Check email' }],
+	      searchText: '',
+	      showCompleted: false
 	    };
 	
 	    _this.addTodo = _this.addTodo.bind(_this);
+	    _this.handleSearch = _this.handleSearch.bind(_this);
 	    return _this;
 	  }
 	
@@ -28018,6 +28025,11 @@
 	      var newId = this.state.todos.length + 1;
 	      this.state.todos.push({ id: newId, text: newTodoText });
 	      console.log(this.state);
+	    }
+	  }, {
+	    key: 'handleSearch',
+	    value: function handleSearch(text, check) {
+	      this.setState({ searchText: text, showCompleted: check });
 	    }
 	  }, {
 	    key: 'render',
@@ -28033,6 +28045,7 @@
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'column small-centered medium-6 large-4' },
+	            _react2.default.createElement(_TodoSearch2.default, { onSearch: this.handleSearch }),
 	            _react2.default.createElement(_TodoList2.default, { todos: this.state.todos }),
 	            _react2.default.createElement(_TodoAddForm2.default, { addTodo: this.addTodo })
 	          )
@@ -28259,6 +28272,82 @@
 
 /***/ }),
 /* 247 */
+/*!**************************************!*\
+  !*** ./src/components/TodoSearch.js ***!
+  \**************************************/
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 8);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var TodoSearch = function (_Component) {
+	  _inherits(TodoSearch, _Component);
+	
+	  function TodoSearch(props) {
+	    _classCallCheck(this, TodoSearch);
+	
+	    var _this = _possibleConstructorReturn(this, (TodoSearch.__proto__ || Object.getPrototypeOf(TodoSearch)).call(this, props));
+	
+	    _this.handleSearch = _this.handleSearch.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(TodoSearch, [{
+	    key: 'handleSearch',
+	    value: function handleSearch() {
+	      var searchText = this.refs.searchText.value;
+	      var showCompleted = this.refs.showCompleted.checked;
+	      this.props.onSearch(searchText, showCompleted);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement('input', { type: 'search', ref: 'searchText', placeholder: 'Search Todos', onChange: this.handleSearch })
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'label',
+	            null,
+	            _react2.default.createElement('input', { type: 'checkbox', ref: 'showCompleted', onChange: this.handleSearch }),
+	            'Show Completed Todos'
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return TodoSearch;
+	}(_react.Component);
+	
+	exports.default = TodoSearch;
+
+/***/ }),
+/* 248 */
 /*!*****************************************************************************!*\
   !*** ./~/style-loader!./~/css-loader!./~/sass-loader!./src/styles/app.scss ***!
   \*****************************************************************************/
@@ -28267,10 +28356,10 @@
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(/*! !../../~/css-loader!../../~/sass-loader!./app.scss */ 248);
+	var content = __webpack_require__(/*! !../../~/css-loader!../../~/sass-loader!./app.scss */ 249);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(/*! ../../~/style-loader/addStyles.js */ 250)(content, {});
+	var update = __webpack_require__(/*! ../../~/style-loader/addStyles.js */ 251)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -28287,13 +28376,13 @@
 	}
 
 /***/ }),
-/* 248 */
+/* 249 */
 /*!************************************************************!*\
   !*** ./~/css-loader!./~/sass-loader!./src/styles/app.scss ***!
   \************************************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(/*! ../../~/css-loader/lib/css-base.js */ 249)();
+	exports = module.exports = __webpack_require__(/*! ../../~/css-loader/lib/css-base.js */ 250)();
 	// imports
 	
 	
@@ -28304,7 +28393,7 @@
 
 
 /***/ }),
-/* 249 */
+/* 250 */
 /*!**************************************!*\
   !*** ./~/css-loader/lib/css-base.js ***!
   \**************************************/
@@ -28363,7 +28452,7 @@
 
 
 /***/ }),
-/* 250 */
+/* 251 */
 /*!*************************************!*\
   !*** ./~/style-loader/addStyles.js ***!
   \*************************************/
