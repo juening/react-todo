@@ -2,15 +2,16 @@ import React, { Component } from 'react';
 import TodoList from 'TodoList';
 import TodoAddForm from 'TodoAddForm';
 import TodoSearch from 'TodoSearch';
+import uuid from 'node-uuid';
 
 class TodoApp extends Component {
   constructor(props) {
     super(props);
     this.state={
       todos: [
-        {id: 1, text: 'Water the plants'},
-        {id: 2, text: 'Clean the yard'},
-        {id: 3, text: 'Check email'}
+        {id: uuid(), text: 'Water the plants', completed: true},
+        {id: uuid(), text: 'Clean the yard', completed: false},
+        {id: uuid(), text: 'Check email', completed:false }
       ],
       searchText:'',
       showCompleted: false
@@ -18,17 +19,31 @@ class TodoApp extends Component {
 
     this.addTodo = this.addTodo.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
+    this.handleToggle = this.handleToggle.bind(this);
   }
 
   addTodo(newTodoText) {
-    console.log('fff')
     const newId = this.state.todos.length + 1;
-    this.state.todos.push({id:newId, text:newTodoText});
-    console.log(this.state);
+    this.setState({todos:
+      [
+        ...this.state.todos,
+        {id: uuid(), text: newTodoText, completed:false }
+      ]
+    });
   }
 
   handleSearch(text, check) {
     this.setState({searchText: text, showCompleted: check});
+  }
+
+  handleToggle(id) {
+    const updatedTodos = this.state.todos.map((todo) => {
+      if(todo.id === id) {
+        todo.completed = !todo.completed;
+      }
+      return todo;
+    });
+    this.setState({ todos: updatedTodos });
   }
 
   render() {
@@ -38,7 +53,7 @@ class TodoApp extends Component {
         <div className='row'>
           <div className='column small-centered medium-6 large-4'>
             <TodoSearch onSearch={this.handleSearch} />
-            <TodoList todos={this.state.todos} />
+            <TodoList todos={this.state.todos} onToggle={this.handleToggle} />
             <TodoAddForm addTodo={this.addTodo} />
           </div>
         </div>
