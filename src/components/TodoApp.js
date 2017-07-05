@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
+import uuid from 'node-uuid';
+
+import TodoAPI from '../api/TodoAPI';
 import TodoList from 'TodoList';
 import TodoAddForm from 'TodoAddForm';
 import TodoSearch from 'TodoSearch';
-import uuid from 'node-uuid';
+
 
 class TodoApp extends Component {
   constructor(props) {
     super(props);
     this.state={
-      todos: [
-        {id: uuid(), text: 'Water the plants', completed: true},
-        {id: uuid(), text: 'Clean the yard', completed: false},
-        {id: uuid(), text: 'Check email', completed:false }
-      ],
+      todos: TodoAPI.getTodos(),
       searchText:'',
       showCompleted: false
     };
@@ -20,6 +19,10 @@ class TodoApp extends Component {
     this.addTodo = this.addTodo.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
+  }
+
+  componentDidUpdate() {
+    TodoAPI.setTodos(this.state.todos);
   }
 
   addTodo(newTodoText) {
@@ -47,13 +50,15 @@ class TodoApp extends Component {
   }
 
   render() {
-    const {todos} = this.state;
+    const { todos, showCompleted, searchText } = this.state;
+    const filteredTodos = TodoAPI.filterTodos(todos, showCompleted, searchText);
+    
     return (
       <div className='app'>
         <div className='row'>
           <div className='column small-centered medium-6 large-4'>
             <TodoSearch onSearch={this.handleSearch} />
-            <TodoList todos={this.state.todos} onToggle={this.handleToggle} />
+            <TodoList todos={filteredTodos} onToggle={this.handleToggle} />
             <TodoAddForm addTodo={this.addTodo} />
           </div>
         </div>
