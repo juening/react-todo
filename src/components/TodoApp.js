@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import uuid from 'node-uuid';
-
+import moment from 'moment';
 import TodoAPI from '../api/TodoAPI';
 import TodoList from 'TodoList';
 import TodoAddForm from 'TodoAddForm';
@@ -30,7 +30,7 @@ class TodoApp extends Component {
     this.setState({todos:
       [
         ...this.state.todos,
-        {id: uuid(), text: newTodoText, completed:false }
+        { id: uuid(), text: newTodoText, completed:false, createdAt: moment().unix(), completedAt: undefined }
       ]
     });
   }
@@ -43,6 +43,7 @@ class TodoApp extends Component {
     const updatedTodos = this.state.todos.map((todo) => {
       if(todo.id === id) {
         todo.completed = !todo.completed;
+        todo.completedAt = todo.completed ? moment().unix() : undefined;
       }
       return todo;
     });
@@ -52,7 +53,7 @@ class TodoApp extends Component {
   render() {
     const { todos, showCompleted, searchText } = this.state;
     const filteredTodos = TodoAPI.filterTodos(todos, showCompleted, searchText);
-    
+
     return (
       <div className='app'>
         <div className='row'>

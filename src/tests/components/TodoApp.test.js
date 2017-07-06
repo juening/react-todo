@@ -18,10 +18,11 @@ describe('TodoApp component test', () => {
     todoApp.addTodo(newText);
 
     expect(todoApp.state.todos[0].text).toBe(newText);
+    expect(todoApp.state.todos[0].createdAt).toBeA('number')
   });
 
   it('should toggle completed value when handleToggle called', () => {
-    const testTodo = {id:12, text: 'test', completed: false };
+    const testTodo = {id:12, text: 'test', completed: false, createdAt: 0, completedAt: undefined };
     const todoApp = TestUtils.renderIntoDocument(<TodoApp />);
     todoApp.setState({ todos: [testTodo] });
 
@@ -29,5 +30,18 @@ describe('TodoApp component test', () => {
 
     todoApp.handleToggle(12);
     expect(todoApp.state.todos[0].completed).toBe(true);
+    expect(todoApp.state.todos[0].completedAt).toBeA('number');
+  });
+
+  it('should toggle completed value when handleToggle called', () => {
+    const testTodo = {id:12, text: 'test', completed: true, createdAt: 0, completedAt: 123 };
+    const todoApp = TestUtils.renderIntoDocument(<TodoApp />);
+    todoApp.setState({ todos: [testTodo] });
+
+    expect(todoApp.state.todos[0].completed).toBe(true);
+
+    todoApp.handleToggle(12);
+    expect(todoApp.state.todos[0].completed).toBe(false);
+    expect(todoApp.state.todos[0].completedAt).toNotExist();
   });
 });
