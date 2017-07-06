@@ -9,6 +9,11 @@ class TodoList extends Component {
   render() {
     const {todos} = this.props;
     const renderList = () => {
+      if(todos.length ===0 ) {
+        return (
+          <p className='container_message'>Nothing to do yet.</p>
+        );
+      }
       return todos.map((todo) => {
         return <Todo key={todo.id}  {...todo} onToggle={this.props.onToggle} />
       });

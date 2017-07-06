@@ -29,4 +29,13 @@ describe('TodoList component test', () => {
 
     expect(todosComponents.length).toBe(todos.length);
   });
+
+  it('tests if the TodoList can render empty todo list', () => {
+    const todos = [   ];
+
+    const todoList = TestUtils.renderIntoDocument(<TodoList todos={todos} />);
+    const $el = $(ReactDOM.findDOMNode(todoList));
+
+    expect($el.find('.container_message').length).toBe(1);
+  });
 });

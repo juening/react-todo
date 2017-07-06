@@ -57,10 +57,12 @@ class TodoApp extends Component {
     return (
       <div className='app'>
         <div className='row'>
-          <div className='column small-centered medium-6 large-4'>
-            <TodoSearch onSearch={this.handleSearch} />
-            <TodoList todos={filteredTodos} onToggle={this.handleToggle} />
-            <TodoAddForm addTodo={this.addTodo} />
+          <div className='column small-centered small-11 medium-6 large-5'>
+            <div className='container'>
+              <TodoSearch onSearch={this.handleSearch} />
+              <TodoList todos={filteredTodos} onToggle={this.handleToggle} />
+              <TodoAddForm addTodo={this.addTodo} />
+            </div>
           </div>
         </div>
       </div>

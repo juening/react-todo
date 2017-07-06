@@ -22,7 +22,7 @@ class TodoAddForm extends Component {
   }
   render() {
     return (
-      <div>
+      <div className='container_footer'>
         <form onSubmit={this.onFormSubmit} className='todo-form'>
           <input type='text' onChange={this.onInputChange}
             name='text' ref='inputText' value={this.state.text} onFocus={()=>{this.setState({text: '' })}} />
