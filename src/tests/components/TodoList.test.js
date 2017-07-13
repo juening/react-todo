@@ -3,9 +3,12 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import $ from 'jquery';
 import TestUtils from 'react-addons-test-utils';
+import { Provider } from 'react-redux';
 
-import TodoList from 'TodoList';
-import Todo from 'Todo';
+import ConnectedTodoList, {TodoList} from 'TodoList';
+import ConnectedTodo, {Todo} from 'Todo';
+
+import { configure } from '../../store/configureStore';
 
 describe('TodoList component test', () => {
   it('tests if the component exist', () => {
@@ -16,26 +19,35 @@ describe('TodoList component test', () => {
     const todos = [
       {
         id: 1,
-        text: 'Do something'
+        text: 'Do something',
+        completed: false,
+        completedAt: undefined,
+        createdAt: 501
       },
       {
         id: 2,
-        text: 'Do the dishes'
+        text: 'Do the dishes',
+        completed: false,
+        completedAt: undefined,
+        createdAt: 502
       }
     ];
 
-    const todoList = TestUtils.renderIntoDocument(<TodoList todos={todos} />);
-    const todosComponents = TestUtils.scryRenderedComponentsWithType(todoList, Todo);
+    const store = configure({
+      todos: todos
+    });
+
+    const provider = TestUtils.renderIntoDocument(
+      <Provider store={store}>
+        <ConnectedTodoList />
+      </Provider>
+    );
+    // const todoList = TestUtils.renderIntoDocument(<TodoList todos={todos} />);
+    const todoList = TestUtils.scryRenderedComponentsWithType(provider, ConnectedTodoList)[0];
+    const todosComponents = TestUtils.scryRenderedComponentsWithType(todoList, ConnectedTodo);
 
     expect(todosComponents.length).toBe(todos.length);
   });
 
-  it('tests if the TodoList can render empty todo list', () => {
-    const todos = [   ];
 
-    const todoList = TestUtils.renderIntoDocument(<TodoList todos={todos} />);
-    const $el = $(ReactDOM.findDOMNode(todoList));
-
-    expect($el.find('.container_message').length).toBe(1);
-  });
 });

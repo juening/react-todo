@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { addTodo } from '../actions/actions';
 
-class TodoAddForm extends Component {
+export class TodoAddForm extends Component {
   constructor(props) {
     super(props);
     this.state={ text: 'Add a new task'};
@@ -12,9 +14,11 @@ class TodoAddForm extends Component {
   }
   onFormSubmit(e) {
     e.preventDefault();
+    const { dispatch } = this.props;
     const inputText = this.state.text;
+
     if (inputText) {
-      this.props.addTodo(inputText);
+      dispatch(addTodo(inputText));
       this.setState({ text: ''});
     } else {
       this.refs.inputText.focus();
@@ -33,4 +37,4 @@ class TodoAddForm extends Component {
   }
 }
 
-export default TodoAddForm;
+export default connect()(TodoAddForm);
