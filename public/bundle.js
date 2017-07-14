@@ -135,15 +135,26 @@
 	
 	var _TodoApp2 = _interopRequireDefault(_TodoApp);
 	
+	var _TodoAPI = __webpack_require__(/*! ./api/TodoAPI */ 432);
+	
+	var _TodoAPI2 = _interopRequireDefault(_TodoAPI);
+	
+	var _actions = __webpack_require__(/*! ./actions/actions */ 431);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var actions = __webpack_require__(/*! ./actions/actions */ 432);
+	// const actions = require('./actions/actions');
 	var store = __webpack_require__(/*! ./store/configureStore */ 435).configure();
 	
 	store.subscribe(function () {
+	  var state = store.getState();
 	  console.log('New state ', store.getState());
+	  _TodoAPI2.default.setTodos(state.todos);
 	});
-	// 
+	
+	var initialTodos = _TodoAPI2.default.getTodos();
+	store.dispatch((0, _actions.addTodos)(initialTodos));
+	//
 	// store.dispatch(actions.addTodo('Clean the yard'));
 	// store.dispatch(actions.setSearchText('yard'));
 	// store.dispatch(actions.toggleShowCompleted());
@@ -29446,11 +29457,7 @@
 	
 	var _moment2 = _interopRequireDefault(_moment);
 	
-	var _TodoAPI = __webpack_require__(/*! ../api/TodoAPI */ 429);
-	
-	var _TodoAPI2 = _interopRequireDefault(_TodoAPI);
-	
-	var _TodoList = __webpack_require__(/*! TodoList */ 430);
+	var _TodoList = __webpack_require__(/*! TodoList */ 429);
 	
 	var _TodoList2 = _interopRequireDefault(_TodoList);
 	
@@ -29464,8 +29471,6 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -29478,59 +29483,12 @@
 	  function TodoApp(props) {
 	    _classCallCheck(this, TodoApp);
 	
-	    var _this = _possibleConstructorReturn(this, (TodoApp.__proto__ || Object.getPrototypeOf(TodoApp)).call(this, props));
-	
-	    _this.state = {
-	      todos: _TodoAPI2.default.getTodos(),
-	      searchText: '',
-	      showCompleted: false
-	    };
-	
-	    _this.addTodo = _this.addTodo.bind(_this);
-	    _this.handleSearch = _this.handleSearch.bind(_this);
-	    _this.handleToggle = _this.handleToggle.bind(_this);
-	    return _this;
+	    return _possibleConstructorReturn(this, (TodoApp.__proto__ || Object.getPrototypeOf(TodoApp)).call(this, props));
 	  }
 	
 	  _createClass(TodoApp, [{
-	    key: 'componentDidUpdate',
-	    value: function componentDidUpdate() {
-	      _TodoAPI2.default.setTodos(this.state.todos);
-	    }
-	  }, {
-	    key: 'addTodo',
-	    value: function addTodo(newTodoText) {
-	      var newId = this.state.todos.length + 1;
-	      this.setState({ todos: [].concat(_toConsumableArray(this.state.todos), [{ id: (0, _nodeUuid2.default)(), text: newTodoText, completed: false, createdAt: (0, _moment2.default)().unix(), completedAt: undefined }])
-	      });
-	    }
-	  }, {
-	    key: 'handleSearch',
-	    value: function handleSearch(text, check) {
-	      this.setState({ searchText: text, showCompleted: check });
-	    }
-	  }, {
-	    key: 'handleToggle',
-	    value: function handleToggle(id) {
-	      var updatedTodos = this.state.todos.map(function (todo) {
-	        if (todo.id === id) {
-	          todo.completed = !todo.completed;
-	          todo.completedAt = todo.completed ? (0, _moment2.default)().unix() : undefined;
-	        }
-	        return todo;
-	      });
-	      this.setState({ todos: updatedTodos });
-	    }
-	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _state = this.state,
-	          todos = _state.todos,
-	          showCompleted = _state.showCompleted,
-	          searchText = _state.searchText;
-	
-	      var filteredTodos = _TodoAPI2.default.filterTodos(todos, showCompleted, searchText);
-	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'app' },
@@ -29543,9 +29501,9 @@
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'container' },
-	              _react2.default.createElement(_TodoSearch2.default, { onSearch: this.handleSearch }),
+	              _react2.default.createElement(_TodoSearch2.default, null),
 	              _react2.default.createElement(_TodoList2.default, null),
-	              _react2.default.createElement(_TodoAddForm2.default, { addTodo: this.addTodo })
+	              _react2.default.createElement(_TodoAddForm2.default, null)
 	            )
 	          )
 	        )
@@ -51871,66 +51829,6 @@
 
 /***/ }),
 /* 429 */
-/*!****************************!*\
-  !*** ./src/api/TodoAPI.js ***!
-  \****************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _jquery = __webpack_require__(/*! jquery */ 7);
-	
-	var _jquery2 = _interopRequireDefault(_jquery);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	module.exports = {
-	  getTodos: function getTodos() {
-	    var stringTodos = localStorage.getItem('todos');
-	    var todos = [];
-	    try {
-	      todos = JSON.parse(stringTodos);
-	    } catch (e) {}
-	    return _jquery2.default.isArray(todos) ? todos : [];
-	    // if($.isArray(todos)) {
-	    //   return todos;
-	    // } else {
-	    //   return [];
-	    // }
-	  },
-	  setTodos: function setTodos(todos) {
-	    if (_jquery2.default.isArray(todos)) {
-	      localStorage.setItem('todos', JSON.stringify(todos));
-	      return todos;
-	    }
-	  },
-	  filterTodos: function filterTodos(todos, showCompleted, searchText) {
-	    var filteredTodos = [];
-	    filteredTodos = todos.filter(function (todo) {
-	      return !todo.completed || showCompleted;
-	    });
-	
-	    filteredTodos = filteredTodos.filter(function (todo) {
-	      var text = todo.text.toLowerCase();
-	      return searchText.length === 0 || todo.text.indexOf(searchText) > -1;
-	    });
-	
-	    filteredTodos.sort(function (a, b) {
-	      if (!a.completed && b.completed) {
-	        return -1;
-	      } else if (a.completed && !b.completed) {
-	        return 1;
-	      } else {
-	        return 0;
-	      }
-	    });
-	
-	    return filteredTodos;
-	  }
-	};
-
-/***/ }),
-/* 430 */
 /*!************************************!*\
   !*** ./src/components/TodoList.js ***!
   \************************************/
@@ -51953,11 +51851,11 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 179);
 	
-	var _Todo = __webpack_require__(/*! Todo */ 431);
+	var _Todo = __webpack_require__(/*! Todo */ 430);
 	
 	var _Todo2 = _interopRequireDefault(_Todo);
 	
-	var _TodoAPI = __webpack_require__(/*! ../api/TodoAPI */ 429);
+	var _TodoAPI = __webpack_require__(/*! ../api/TodoAPI */ 432);
 	
 	var _TodoAPI2 = _interopRequireDefault(_TodoAPI);
 	
@@ -52016,7 +51914,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(TodoList);
 
 /***/ }),
-/* 431 */
+/* 430 */
 /*!********************************!*\
   !*** ./src/components/Todo.js ***!
   \********************************/
@@ -52041,7 +51939,7 @@
 	
 	var _moment2 = _interopRequireDefault(_moment);
 	
-	var _actions = __webpack_require__(/*! ../actions/actions */ 432);
+	var _actions = __webpack_require__(/*! ../actions/actions */ 431);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -52117,7 +52015,7 @@
 	exports.default = (0, _reactRedux.connect)()(Todo);
 
 /***/ }),
-/* 432 */
+/* 431 */
 /*!********************************!*\
   !*** ./src/actions/actions.js ***!
   \********************************/
@@ -52154,6 +52052,73 @@
 	    id: id
 	  };
 	};
+	
+	var addTodos = exports.addTodos = function addTodos(todos) {
+	  return {
+	    type: 'ADD_TODOS',
+	    todos: todos
+	  };
+	};
+
+/***/ }),
+/* 432 */
+/*!****************************!*\
+  !*** ./src/api/TodoAPI.js ***!
+  \****************************/
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _jquery = __webpack_require__(/*! jquery */ 7);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	module.exports = {
+	  getTodos: function getTodos() {
+	    var stringTodos = localStorage.getItem('todos');
+	    var todos = [];
+	    try {
+	      todos = JSON.parse(stringTodos);
+	    } catch (e) {}
+	    return _jquery2.default.isArray(todos) ? todos : [];
+	    // if($.isArray(todos)) {
+	    //   return todos;
+	    // } else {
+	    //   return [];
+	    // }
+	  },
+	  setTodos: function setTodos(todos) {
+	    if (_jquery2.default.isArray(todos)) {
+	      localStorage.setItem('todos', JSON.stringify(todos));
+	      return todos;
+	    }
+	  },
+	  filterTodos: function filterTodos(todos, showCompleted, searchText) {
+	    var filteredTodos = [];
+	    filteredTodos = todos.filter(function (todo) {
+	      return !todo.completed || showCompleted;
+	    });
+	
+	    filteredTodos = filteredTodos.filter(function (todo) {
+	      var text = todo.text.toLowerCase();
+	      return searchText.length === 0 || todo.text.indexOf(searchText) > -1;
+	    });
+	
+	    filteredTodos.sort(function (a, b) {
+	      if (!a.completed && b.completed) {
+	        return -1;
+	      } else if (a.completed && !b.completed) {
+	        return 1;
+	      } else {
+	        return 0;
+	      }
+	    });
+	
+	    return filteredTodos;
+	  }
+	};
 
 /***/ }),
 /* 433 */
@@ -52177,7 +52142,7 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 179);
 	
-	var _actions = __webpack_require__(/*! ../actions/actions */ 432);
+	var _actions = __webpack_require__(/*! ../actions/actions */ 431);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -52273,7 +52238,7 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 179);
 	
-	var _actions = __webpack_require__(/*! ../actions/actions */ 432);
+	var _actions = __webpack_require__(/*! ../actions/actions */ 431);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -52445,6 +52410,9 @@
 	      return state.map(function (todo) {
 	        return todo.id === action.id ? _extends({}, todo, { completed: !todo.completed, completedAt: (0, _moment2.default)().unix() }) : todo;
 	      });
+	
+	    case 'ADD_TODOS':
+	      return [].concat(_toConsumableArray(state), _toConsumableArray(action.todos));
 	    default:
 	      return state;
 	  }

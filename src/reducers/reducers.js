@@ -36,6 +36,9 @@ export const todosReducer = (state=[], action) => {
       return state.map(todo => {
         return todo.id === action.id ? { ...todo, completed: !todo.completed, completedAt: moment().unix()} : todo;
       });
+
+    case 'ADD_TODOS':
+      return [ ...state, ...action.todos]
     default:
       return state;
   }

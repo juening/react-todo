@@ -24,3 +24,11 @@ export const toggleTodo = (id) => {
     id
   };
 }
+
+
+export const addTodos = (todos) => {
+  return {
+    type:'ADD_TODOS',
+    todos
+  };
+}

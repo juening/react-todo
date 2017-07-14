@@ -45,5 +45,51 @@ describe('reducers', () => {
     const res = todosReducer(df(testState), df(action));
     expect(res[0].completed).toBe(true);
     expect(res[0].completedAt).toExist();
-  })
+  });
+
+  it('shoud add existing todos', () => {
+    const originalTodos = [
+      {
+        id: 1,
+        text: 'Do something',
+        completed: false,
+        completedAt: undefined,
+        createdAt: 501
+      }
+    ];
+    const todos = [
+      {
+        id: 2,
+        text: 'Do the dishes',
+        completed: false,
+        completedAt: undefined,
+        createdAt: 502
+      }
+    ];
+
+    const testAction = {
+      type: 'ADD_TODOS',
+      todos
+    };
+
+    const expectedState = [
+      {
+        id: 1,
+        text: 'Do something',
+        completed: false,
+        completedAt: undefined,
+        createdAt: 501
+      },
+      {
+        id: 2,
+        text: 'Do the dishes',
+        completed: false,
+        completedAt: undefined,
+        createdAt: 502
+      }
+    ];
+
+    const testResult = todosReducer(df(originalTodos), df(testAction));
+    expect(testResult).toEqual(expectedState)
+  });
 })

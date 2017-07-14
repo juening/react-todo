@@ -4,14 +4,22 @@ import { Provider } from 'react-redux';
 import { Router, Route, IndexRoute, browserHistory, hashHistory } from 'react-router';
 import App from 'App';
 import TodoApp from 'TodoApp';
+import TodoAPI from './api/TodoAPI';
 
-const actions = require('./actions/actions');
+import { addTodos } from './actions/actions';
+
+// const actions = require('./actions/actions');
 const store = require('./store/configureStore').configure();
 
 store.subscribe(() => {
+  const state = store.getState();
   console.log('New state ', store.getState());
+  TodoAPI.setTodos(state.todos);
 });
-// 
+
+const initialTodos = TodoAPI.getTodos();
+store.dispatch(addTodos(initialTodos));
+//
 // store.dispatch(actions.addTodo('Clean the yard'));
 // store.dispatch(actions.setSearchText('yard'));
 // store.dispatch(actions.toggleShowCompleted());
